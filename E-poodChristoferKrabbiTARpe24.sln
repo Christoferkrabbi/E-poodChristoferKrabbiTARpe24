@@ -5,6 +5,10 @@ VisualStudioVersion = 17.13.35913.81 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{19162622-413A-41FA-8FC0-FDAA7E6F2199}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{109B46F6-B005-4121-A0F3-14C865A93B77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "PaymentService\PaymentService.csproj", "{428B91A0-AF69-469A-9739-520E4C1577FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{19162622-413A-41FA-8FC0-FDAA7E6F2199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19162622-413A-41FA-8FC0-FDAA7E6F2199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19162622-413A-41FA-8FC0-FDAA7E6F2199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109B46F6-B005-4121-A0F3-14C865A93B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109B46F6-B005-4121-A0F3-14C865A93B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109B46F6-B005-4121-A0F3-14C865A93B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109B46F6-B005-4121-A0F3-14C865A93B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{428B91A0-AF69-469A-9739-520E4C1577FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{428B91A0-AF69-469A-9739-520E4C1577FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{428B91A0-AF69-469A-9739-520E4C1577FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{428B91A0-AF69-469A-9739-520E4C1577FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

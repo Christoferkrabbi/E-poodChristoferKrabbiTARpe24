@@ -31,6 +31,8 @@ namespace OrderService
             app.MapControllers();
 
             app.Run();
+
+            builder.Services.AddHttpClient();
         }
     }
 }

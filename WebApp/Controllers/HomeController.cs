@@ -6,27 +6,22 @@ namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly HttpClient _httpClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IHttpClientFactory factory)
         {
-            _logger = logger;
+            _httpClient = factory.CreateClient();
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> CreateOrder()
         {
+            var response = await _httpClient.PostAsync(
+                "https://localhost:xxxx/api/order/create", null);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            ViewBag.Result = result;
             return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

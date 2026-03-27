@@ -18,10 +18,11 @@ namespace WebApp.Controllers
             _httpClient = factory.CreateClient();
         }
 
-        public async Task<IActionResult> CreateOrder()
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder(int productId)
         {
             var response = await _httpClient.PostAsync(
-                "https://localhost:xxxx/api/order/create", null);
+                "https://localhost:7297/api/order/create", null);
 
             var result = await response.Content.ReadAsStringAsync();
 

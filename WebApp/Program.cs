@@ -6,6 +6,8 @@ namespace WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddHttpClient();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -31,6 +33,10 @@ namespace WebApp
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+
+            app.MapGet("/", () => "WORKS");
+
+            
         }
     }
 }

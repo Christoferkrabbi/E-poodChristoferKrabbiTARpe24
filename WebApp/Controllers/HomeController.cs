@@ -8,6 +8,11 @@ namespace WebApp.Controllers
     {
         private readonly HttpClient _httpClient;
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public HomeController(IHttpClientFactory factory)
         {
             _httpClient = factory.CreateClient();
@@ -23,5 +28,7 @@ namespace WebApp.Controllers
             ViewBag.Result = result;
             return View();
         }
+
+
     }
 }

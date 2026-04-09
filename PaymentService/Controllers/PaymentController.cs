@@ -2,14 +2,19 @@
 
 namespace PaymentService.Controllers
 {
-    [ApiController]
-    [Route("api/payment")]
-    public class PaymentController : ControllerBase
-    {
-        [HttpPost("check")]
-        public IActionResult CheckPayment()
-        {
-            return Ok(new { success = true });
-        }
-    }
+	[ApiController]
+	[Route("api/payment")]
+	public class PaymentController : ControllerBase
+	{
+		[HttpPost("check")]
+		public IActionResult CheckPayment()
+		{
+			var success = Random.Shared.Next(0, 2) == 1;
+
+			if (!success)
+				return BadRequest("Payment failed");
+
+			return Ok(new { success = true });
+		}
+	}
 }

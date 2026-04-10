@@ -20,6 +20,7 @@ namespace OrderService.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
         {
+            Console.WriteLine("ORDER SERVICE HIT");
             var response = await _httpClient.PostAsync(
                 "http://localhost:5109/api/payment/check",
                 null
@@ -29,6 +30,7 @@ namespace OrderService.Controllers
             {
                 return BadRequest(new { success = false, message = "Payment failed" });
             }
+
 
             return Ok(new { success = true, message = "Order created successfully" });
         }

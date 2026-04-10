@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OrderService.Models;
 using System.Text;
 using System.Text.Json;
 using WebApp.Models;
@@ -7,7 +8,7 @@ namespace OrderService.Controllers
 {
     [ApiController]
     [Route("api/order")]
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
         private readonly HttpClient _httpClient;
 
@@ -16,33 +17,20 @@ namespace OrderService.Controllers
             _httpClient = factory.CreateClient();
         }
 
-		[HttpPost]
-		public async Task<IActionResult> CreateOrder(int productId)
-		{
-			var orderData = new
-			{
-				ProductId = productId,
-				UserId = 1
-			};
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
+        {
+            var response = await _httpClient.PostAsync(
+                "http://localhost:5109/api/payment/check",
+                null
+            );
 
-			var content = new StringContent(
-				JsonSerializer.Serialize(orderData),
-				Encoding.UTF8,
-				"application/json"
-			);
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest(new { success = false, message = "Payment failed" });
+            }
 
-			var response = await _httpClient.PostAsync(
-				"https://localhost:7297/api/order/create", content);
-
-			var resultString = await response.Content.ReadAsStringAsync();
-
-			var model = new OrderResultViewModel
-			{
-				Result = resultString ?? "No result",
-				IsSuccess = resultString?.Contains("success") ?? false
-			};
-
-			return View("OrderResult", model);
-		}
-	}
+            return Ok(new { success = true, message = "Order created successfully" });
+        }
+    }
 }

@@ -19,30 +19,34 @@ namespace WebApp.Controllers
         {
             _httpClient = factory.CreateClient();
         }
+        public async Task<IActionResult> CreateOrder(int productId)
+        {
+            var orderData = new
+            {
+                ProductId = productId,
+                UserId = 1
+            };
 
-       [HttpPost]
-		public async Task<IActionResult> CreateOrder(int productId)
-		{
-			var orderData = new
-			{
-				ProductId = productId,
-				UserId = 1
-			};
+            var content = new StringContent(
+                JsonSerializer.Serialize(orderData),
+                Encoding.UTF8,
+                "application/json"
+            );
 
-			var content = new StringContent(
-				JsonSerializer.Serialize(orderData),
-				Encoding.UTF8,
-				"application/json"
-			);
+            var response = await _httpClient.PostAsync(
+                "http://localhost:5047/api/order/create",
+                content
+            );
 
-			var response = await _httpClient.PostAsync(
-				"https://localhost:7297/api/order/create", content);
+            var resultString = await response.Content.ReadAsStringAsync();
 
-			var result = await response.Content.ReadAsStringAsync();
+            var model = new OrderResultViewModel
+            {
+                Result = resultString,
+                IsSuccess = response.IsSuccessStatusCode
+            };
 
-			ViewBag.Result = result;
-
-			return View("OrderResult");
-		}
-	}
+            return View("OrderResult", model);
+        }
+    }
 }

@@ -11,7 +11,9 @@ namespace WebApp
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+			builder.Services.AddSession();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -24,7 +26,9 @@ namespace WebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+			app.UseSession();
+
+			app.UseRouting();
 
             app.UseAuthorization();
 

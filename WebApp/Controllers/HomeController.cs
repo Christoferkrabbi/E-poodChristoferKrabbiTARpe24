@@ -6,7 +6,8 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    public class HomeController : Controller
+
+	public class HomeController : Controller
     {
         private readonly HttpClient _httpClient;
 

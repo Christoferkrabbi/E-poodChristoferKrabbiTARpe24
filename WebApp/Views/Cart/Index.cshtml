@@ -1,0 +1,23 @@
+﻿@model List<WebApp.Models.CartItem>
+
+<h2>Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Cart is empty</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item.Name - @item.Price €</li>
+        }
+    </ul>
+
+    <form method="post" asp-action="Checkout">
+        <button type="submit">Checkout</button>
+    </form>
+}
+
+<a href="/Store/Index">Back to store</a>

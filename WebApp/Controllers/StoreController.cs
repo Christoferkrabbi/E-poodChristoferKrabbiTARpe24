@@ -9,6 +9,9 @@ public class StoreController : Controller
 	{
 		new Product { Id = 1, Name = "Sword", Price = 50 },
 		new Product { Id = 2, Name = "Shield", Price = 35 },
+		new Product { Id = 3, Name = "Potion", Price = 10 },
+		new Product { Id = 1, Name = "Sword", Price = 50 },
+		new Product { Id = 2, Name = "Shield", Price = 35 },
 		new Product { Id = 3, Name = "Potion", Price = 10 }
 	};
 

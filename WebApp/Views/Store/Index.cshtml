@@ -1,22 +1,21 @@
 ﻿@model List<WebApp.Models.Product>
 
-<h2>Store</h2>
+<h2>Merchant's Wares</h2>
 
-<a href="/Cart/Index">Go to Cart</a>
-
-<div style="border-radius:10px; box-shadow:0 2px 5px gray; padding:15px; width:150px;">
-@foreach (var item in Model)
-{
-    <div style="border:1px solid gray; padding:15px; width:150px;">
-        <h3>@item.Name</h3>
-        <p>Price: @item.Price €</p>
+<div class="product-grid">
+    @foreach (var item in Model)
+    {
+        <div class="product-card">
+            <h3>@item.Name</h3>
+            <p>@item.Price gold</p>
 
             <form method="post" asp-controller="Cart" asp-action="AddToCart">
                 <input type="hidden" name="productId" value="@item.Id" />
                 <input type="hidden" name="name" value="@item.Name" />
                 <input type="hidden" name="price" value="@item.Price" />
-                <button type="submit">Add to Cart</button>
+
+                <button>Add to Cart</button>
             </form>
-    </div>
-}
+        </div>
+    }
 </div>

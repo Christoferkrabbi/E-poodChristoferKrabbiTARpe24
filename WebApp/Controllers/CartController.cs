@@ -30,16 +30,42 @@ public class CartController : Controller
 	{
 		var cart = GetCart();
 
-		cart.Add(new CartItem
+		var existingItem = cart.FirstOrDefault(x => x.ProductId == productId);
+
+		if (existingItem != null)
 		{
-			ProductId = productId,
-			Name = name,
-			Price = price
-		});
+			existingItem.Quantity++;
+		}
+		else
+		{
+			cart.Add(new CartItem
+			{
+				ProductId = productId,
+				Name = name,
+				Price = price,
+				Quantity = 1
+			});
+		}
 
 		SaveCart(cart);
 
 		return RedirectToAction("Index", "Store");
+	}
+
+	[HttpPost]
+	public IActionResult RemoveFromCart(int productId)
+	{
+		var cart = GetCart();
+
+		var item = cart.FirstOrDefault(x => x.ProductId == productId);
+		if (item != null)
+		{
+			cart.Remove(item);
+		}
+
+		SaveCart(cart);
+
+		return RedirectToAction("Index");
 	}
 
 	[HttpPost]
@@ -50,7 +76,13 @@ public class CartController : Controller
 		if (!cart.Any())
 			return RedirectToAction("Index");
 
+		// For now: send first item (simple version)
+		// BUT this is where you'd normally send full cart to OrderService
+
 		var firstItem = cart.First();
+
+		// clear cart after checkout
+		SaveCart(new List<CartItem>());
 
 		return RedirectToAction("CreateOrder", "Home", new { productId = firstItem.ProductId });
 	}

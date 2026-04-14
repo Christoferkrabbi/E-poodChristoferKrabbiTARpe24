@@ -1,18 +1,14 @@
-﻿@model OrderResultViewModel
+﻿<div>
+    <h2>Order Result</h2>
 
-<h2>Order Result</h2>
-
-@if (Model.IsSuccess)
-{
-    <div style="color: green;">
-        ✅ @Model.Result
-    </div>
-}
-else
-{
-    <div style="color: red;">
-        ❌ @Model.Result
-    </div>
-}
-
-<a href="/Store/Index">Back to store</a>
+    @if (Model.IsSuccess)
+    {
+        <div class="success">@Model.Result</div>
+    }
+    else
+    {
+        <div class="error">@Model.Result</div>
+    }
+    <br />
+    <a href="/Store/Index">Back to store</a>
+</div>

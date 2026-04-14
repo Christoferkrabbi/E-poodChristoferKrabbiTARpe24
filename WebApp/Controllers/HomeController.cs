@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -39,15 +39,22 @@ namespace WebApp.Controllers
                 content
             );
 
-            var resultString = await response.Content.ReadAsStringAsync();
+			var json = await response.Content.ReadAsStringAsync();
 
-            var model = new OrderResultViewModel
-            {
-                Result = resultString,
-                IsSuccess = response.IsSuccessStatusCode
-            };
+			string message = "Something went wrong";
 
-            return View("OrderResult", model);
+			if (json.Contains("Payment failed"))
+				message = "If this was real, you'd be furious rn, contacting support and stuff";
+			else if (json.Contains("Order created"))
+				message = "If this was real, your purcase would have been completed and youd be really happy or you'd probably regret spending your money. But either way... here you are!";
+
+			var model = new OrderResultViewModel
+			{
+				Result = message,
+				IsSuccess = response.IsSuccessStatusCode
+			};
+
+			return View("OrderResult", model);
         }
     }
 }

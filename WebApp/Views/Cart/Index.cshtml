@@ -1,23 +1,31 @@
-﻿@model List<WebApp.Models.CartItem>
+﻿<div>
+    <h2>Your Cart</h2>
 
-<h2>Your Cart</h2>
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th></th>
+        </tr>
 
-@if (!Model.Any())
-{
-    <p>Cart is empty</p>
-}
-else
-{
-    <ul>
         @foreach (var item in Model)
         {
-            <li>@item.Name - @item.Price €</li>
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price €</td>
+                <td>@item.Quantity</td>
+                <td>
+                    <form method="post" asp-action="RemoveFromCart">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <button class="btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
         }
-    </ul>
+    </table>
 
     <form method="post" asp-action="Checkout">
-        <button type="submit">Checkout</button>
+        <button class="btn-success">Checkout</button>
     </form>
-}
-
-<a href="/Store/Index">Back to store</a>
+</div>

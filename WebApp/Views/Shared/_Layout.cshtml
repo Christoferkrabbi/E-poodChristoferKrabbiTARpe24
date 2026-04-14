@@ -5,33 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">My Store</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="/Store/Index">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Home/Index">Home</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/Store/Index">Store</a></li>
+            <li><a href="/Cart/Index">Cart</a></li>
+        </ul>
+    </nav>
+  
+
+    <div class="background">
+        <div class="container">
+            @RenderBody() 
+        </div> 
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer>
+        <p>
             &copy; 2026 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        </p>
     </footer>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

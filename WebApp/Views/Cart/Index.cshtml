@@ -1,4 +1,8 @@
-﻿<div>
+﻿@{
+    decimal total = 0;
+}
+
+<div>
     <h2>Your Cart</h2>
 
     <table>
@@ -10,12 +14,16 @@
         </tr>
 
         @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Price €</td>
-                <td>@item.Quantity</td>
-                <td>
+{
+    var itemTotal = item.Price * item.Quantity;
+    total += itemTotal;
+
+    <tr>
+        <td>@item.Name</td>
+        <td>@item.Price €</td>
+        <td>@item.Quantity</td>
+        <td>@itemTotal €</td>
+        <td>
                     <form method="post" asp-action="RemoveFromCart">
                         <input type="hidden" name="productId" value="@item.ProductId" />
                         <button class="btn-danger">Remove</button>
@@ -24,6 +32,7 @@
             </tr>
         }
     </table>
+    <h2>Total: @total €</h2>
 
     <form method="post" asp-action="Checkout">
         <button class="btn-success">Checkout</button>

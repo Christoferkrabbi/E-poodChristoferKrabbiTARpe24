@@ -77,11 +77,10 @@ public class CartController : Controller
 			return RedirectToAction("Index");
 
 		// For now: send first item (simple version)
-		// BUT this is where you'd normally send full cart to OrderService
+		// BUT this is where I'd normally send full cart to OrderService
 
 		var firstItem = cart.First();
 
-		// clear cart after checkout
 		SaveCart(new List<CartItem>());
 
 		return RedirectToAction("CreateOrder", "Home", new { productId = firstItem.ProductId });

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApp
 {
@@ -8,35 +9,36 @@ namespace WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Force app-wide culture to one that uses Euro (example: Ireland)
+            // optional: global euro culture (keeps currency formatting consistent)
             var euroCulture = new CultureInfo("en-IE");
             CultureInfo.DefaultThreadCurrentCulture = euroCulture;
             CultureInfo.DefaultThreadCurrentUICulture = euroCulture;
 
             builder.Services.AddHttpClient();
-
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession();
 
-			builder.Services.AddSession();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.Cookie.Name = "WebAppAuth";
+                });
 
-			var app = builder.Build();
+            var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
+            app.UseRouting();
 
-			app.UseSession();
-
-			app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -44,8 +46,6 @@ namespace WebApp
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-
-            app.MapGet("/", () => "WORKS");
         }
     }
 }

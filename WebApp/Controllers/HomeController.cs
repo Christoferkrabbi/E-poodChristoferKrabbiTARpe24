@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +9,6 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-
 	public class HomeController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         {
             _httpClient = factory.CreateClient();
         }
+
         public async Task<IActionResult> CreateOrder(int productId)
         {
             var orderData = new
@@ -59,7 +60,7 @@ namespace WebApp.Controllers
 			// Record completed order in in-memory storage so history can show purchased items and cost
 			if (response.IsSuccessStatusCode && json.Contains("Order created"))
 			{
-				// simple product lookup to reconstruct purchased item (matches StoreController listing)
+				// reconstruct purchased item (matches StoreController listing)
 				var products = new List<Product>
 				{
 					new Product { Id = 1, Name = "Sword", Price = 50 },
@@ -91,11 +92,14 @@ namespace WebApp.Controllers
 					});
 				}
 
+				var username = User?.Identity?.IsAuthenticated == true ? User.Identity.Name : "anonymous";
+
 				var order = new Order
 				{
 					Items = items,
 					Total = items.Sum(i => i.Price * i.Quantity),
-					CreatedAt = DateTime.Now
+					CreatedAt = DateTime.Now,
+					Username = username
 				};
 
 				OrderStorage.Orders.Add(order);
@@ -104,9 +108,16 @@ namespace WebApp.Controllers
 			return View("OrderResult", model);
         }
 
+		[Authorize]
 		public IActionResult OrderHistory()
 		{
-			return View(OrderStorage.Orders);
+			var username = User?.Identity?.Name ?? "";
+			var ordersForUser = OrderStorage.Orders
+				.Where(o => string.Equals(o.Username, username, StringComparison.OrdinalIgnoreCase))
+				.OrderByDescending(o => o.CreatedAt)
+				.ToList();
+
+			return View(ordersForUser);
 		}
 	}
 }

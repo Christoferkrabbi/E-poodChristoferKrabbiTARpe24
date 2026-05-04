@@ -134,7 +134,7 @@ th, td {
 }
 
 /* LINKS */
-a, p, div a, div p {
+a, p, div a, div p, label, li {
     color: #c9a34e;
     text-decoration: none;
 }
@@ -162,4 +162,16 @@ footer {
         
     }
 
+.nav-list {
+    display: flex;
+    width: 100%; /* This makes the list span the full navbar width */
+    list-style: none; /* Removes bullets if you haven't already */
+    padding: 0;
+    margin: 0;
+}
 
+.auth-group {
+    margin-left: auto; /* This pushes the entire auth group to the right */
+    display: flex; /* Keeps Login and Register side-by-side */
+    gap: 15px; /* Adds space between Login and Register */
+}

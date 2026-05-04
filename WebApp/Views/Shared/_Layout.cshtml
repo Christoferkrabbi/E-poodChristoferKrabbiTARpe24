@@ -12,18 +12,30 @@
 </head>
 <body>
     <nav class="navbar">
-        <ul>
+        <ul class="nav-list">
             <li><a href="/Home/OrderHistory">Order History</a></li>
             <li><a href="/Store/Index">Store</a></li>
             <li><a href="/Cart/Index">Cart</a></li>
+
+            <li class="auth-group">
+                @if (User?.Identity?.IsAuthenticated == true)
+                {
+                    <span class="nav-user">Hello, @User.Identity.Name</span>
+                    <a  href="/Account/Logout">Logout</a>
+                }
+                else
+                {
+                    <a href="/Account/Login">Login</a>
+                    <a href="/Account/Register">Register</a>
+                }
+            </li>
         </ul>
     </nav>
-  
 
     <div class="background">
         <div class="container">
-            @RenderBody() 
-        </div> 
+            @RenderBody()
+        </div>
     </div>
 
     <footer>
@@ -31,7 +43,6 @@
             &copy; 2026 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </p>
     </footer>
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

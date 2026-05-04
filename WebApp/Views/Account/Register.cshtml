@@ -1,0 +1,25 @@
+@model WebApp.Models.User
+
+<h2>Register</h2>
+
+<form method="post" action="/Account/Register">
+    <div>
+        <label>Username</label>
+        <input name="username" value="@Model?.Username" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input name="password" type="password" />
+    </div>
+    <button type="submit">Register</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <ul>
+    @foreach (var e in ViewData.ModelState.SelectMany(m => m.Value.Errors))
+    {
+        <li>@e.ErrorMessage</li>
+    }
+    </ul>
+}

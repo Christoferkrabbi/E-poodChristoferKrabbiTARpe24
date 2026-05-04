@@ -60,7 +60,7 @@ body {
 }
 
 /* HEADINGS */
-h2, h1 {
+h2, h1, h3, h4 {
     border-bottom: 2px solid #c9a34e;
     padding-bottom: 5px;
     color: #c9a34e;

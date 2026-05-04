@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace WebApp
 {
     public class Program
@@ -5,6 +7,11 @@ namespace WebApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Force app-wide culture to one that uses Euro (example: Ireland)
+            var euroCulture = new CultureInfo("en-IE");
+            CultureInfo.DefaultThreadCurrentCulture = euroCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = euroCulture;
 
             builder.Services.AddHttpClient();
 
@@ -39,8 +46,6 @@ namespace WebApp
             app.Run();
 
             app.MapGet("/", () => "WORKS");
-
-            
         }
     }
 }

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WebApp.Models.Order>
+
+<h2>Order History</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No orders found.</p>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div class="order-entry">
+            <h4>Ordered: @order.CreatedAt.ToString("g")</h4>
+
+            @if (order.Items != null && order.Items.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.Items)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.Price.ToString("C")</td>
+                                <td>@( (item.Price * item.Quantity).ToString("C") )</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            <p><strong>Total:</strong> @order.Total.ToString("C")</p>
+        </div>
+    }
+}

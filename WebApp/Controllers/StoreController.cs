@@ -3,17 +3,20 @@ using WebApp.Models;
 
 public class StoreController : Controller
 {
-	public IActionResult Index()
+	public IActionResult Index(string search)
 	{
 		var products = new List<Product>
 	{
 		new Product { Id = 1, Name = "Sword", Price = 50 },
 		new Product { Id = 2, Name = "Shield", Price = 35 },
-		new Product { Id = 3, Name = "Potion", Price = 10 },
-		new Product { Id = 1, Name = "Sword", Price = 50 },
-		new Product { Id = 2, Name = "Shield", Price = 35 },
 		new Product { Id = 3, Name = "Potion", Price = 10 }
 	};
+		if (!string.IsNullOrEmpty(search))
+		{
+			products = products
+				.Where(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+				.ToList();
+		}
 
 		return View(products);
 	}

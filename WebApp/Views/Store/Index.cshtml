@@ -2,6 +2,12 @@
 
 <h2>Merchant's Wares</h2>
 
+<form method="get">
+    <input type="text" name="search" placeholder="Search products..." />
+    <button type="submit">Search</button>
+</form>
+<br/>
+
 <div class="product-grid">
     @foreach (var item in Model)
     {

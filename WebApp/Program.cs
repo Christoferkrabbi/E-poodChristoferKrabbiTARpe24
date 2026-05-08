@@ -1,5 +1,7 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using WebApp.Entities;
 
 namespace WebApp
 {
@@ -8,6 +10,8 @@ namespace WebApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             // optional: global euro culture (keeps currency formatting consistent)
             var euroCulture = new CultureInfo("en-IE");
@@ -18,12 +22,7 @@ namespace WebApp
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Account/Login";
-                    options.Cookie.Name = "WebAppAuth";
-                });
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             var app = builder.Build();
 

@@ -1,70 +1,107 @@
 using System.Security.Claims;
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Entities;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        [HttpGet]
-        public IActionResult Register() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Register(string username, string password)
+        private readonly AppDbContext _context;
+        public AccountController(AppDbContext appDbContext)
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            _context = appDbContext;
+        }
+        public IActionResult Index()
+        {
+            return View(_context.UserAccounts.ToList());    
+        }
+        public IActionResult Registration()
+        {
+            return View();
+        }
+        public IActionResult Registration(RegistrationViewModel model)
+        {
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Username and password are required.");
+                UserAccount account = new UserAccount();
+                account.Email = model.Email;
+                account.FirstName = model.FirstName;
+                account.LastName = model.LastName;
+                account.Password = model.Password;
+                account.UserName = model.UserName;
+
+                try
+                {
+                    _context.UserAccounts.Add(account);
+                    _context.SaveChanges();
+
+                    ModelState.Clear();
+                    ViewBag.Message = $"{account.FirstName} {account.LastName} resgistered successfully. Please login";
+                }
+                catch (DbUpdateException ex)
+                {
+                    ModelState.AddModelError("", "Please enter unique Email or Password.");
+                    return View(model);
+                }
                 return View();
             }
-
-            if (UserStore.Find(username) != null)
-            {
-                ModelState.AddModelError("", "Username already taken.");
-                return View();
-            }
-
-            var user = new User { Username = username, Password = password };
-            UserStore.Add(user);
-
-            // sign in
-            var claims = new[] { new Claim(ClaimTypes.Name, username) };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return RedirectToAction("Index", "Home");
+            return View(model);
         }
 
-        [HttpGet]
-        public IActionResult Login() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        public IActionResult Login()
         {
-            var user = UserStore.Find(username);
-            if (user == null || user.Password != password)
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            if(ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Invalid username or password.");
-                return View();
+                var user = _context.UserAccounts.Where(x => (x.UserName == model.UserNameOrEmail || x.Email == model.UserNameOrEmail) && x.Password == model.Password).FirstOrDefault(); 
+                if(user != null)
+                {
+                    //success, create cookie
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim("Name", user.FirstName),
+                        new Claim(ClaimTypes.Role, "User"),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    return RedirectToAction("SecurePage"); 
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Username/Email or password is not correct");
+
+                }
             }
-
-            var claims = new[] { new Claim(ClaimTypes.Name, username) };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-            return RedirectToAction("Index", "Home");
+            return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
+        public IActionResult LogOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index");
+        }
+        [Authorize] 
+        public IActionResult SecurePage()
+        {
+            ViewBag.Name = HttpContext.User.Identity.Name;
+            return View();
         }
     }
+
 }
+
+        

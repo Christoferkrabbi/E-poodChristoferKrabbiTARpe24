@@ -21,7 +21,8 @@ namespace WebApp.Entities
         [Required(ErrorMessage = "Password is required.")]
         [MaxLength(20, ErrorMessage ="Max 20 caharcters allowed.")]
         public string Password { get; set; }
-  
-        
-    }
+		public string Role { get; set; } = "User";
+
+
+	}
 }

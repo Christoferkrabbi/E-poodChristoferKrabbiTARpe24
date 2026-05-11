@@ -1,0 +1,17 @@
+@model WebApp.Models.Product
+
+<h2>Add product</h2>
+
+<form asp-action="AddProduct" asp-controller="Admin" method="post">
+    @Html.AntiForgeryToken()
+    <div>
+        <label>Name</label>
+        <input name="Name" value="@Model?.Name" />
+    </div>
+    <div>
+        <label>Price</label>
+        <input name="Price" value="@Model?.Price" />
+    </div>
+    <button type="submit" class="btn">Create</button>
+    <a asp-action="Index" asp-controller="Admin" class="btn">Cancel</a>
+</form>

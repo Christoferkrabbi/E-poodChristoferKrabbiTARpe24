@@ -28,6 +28,10 @@
                     <a href="/Account/Login">Login</a>
                     <a href="/Account/Registration">Register</a>
                 }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                }
             </li>
         </ul>
     </nav>

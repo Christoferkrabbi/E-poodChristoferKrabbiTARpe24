@@ -73,8 +73,8 @@ namespace WebApp.Controllers
                     {
                         new Claim(ClaimTypes.Name, user.Email),
                         new Claim("Name", user.FirstName),
-                        new Claim(ClaimTypes.Role, "User"),
-                    };
+						new Claim(ClaimTypes.Role, user.Role),
+					};
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));

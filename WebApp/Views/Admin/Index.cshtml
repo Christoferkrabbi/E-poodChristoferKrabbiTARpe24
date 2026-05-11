@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WebApp.Models.Product>
+
+<h2>Admin panel</h2>
+
+<p>
+    <a asp-controller="Admin" asp-action="AddProduct" class="button">Add product</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var p in Model)
+{
+    <tr>
+        <td>@p.Name</td>
+        <td>@p.Price.ToString("C")</td>
+        <td>
+            <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@p.Id" class="button">Edit</a>
+
+            <form asp-controller="Admin" asp-action="RemoveProduct" method="post" style="display:inline">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@p.Id"/>
+                <button type="submit" class="button">Remove</button>
+            </form>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

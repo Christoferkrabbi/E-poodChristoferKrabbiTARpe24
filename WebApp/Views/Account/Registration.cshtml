@@ -1,15 +1,15 @@
 ﻿@model WebApp.Models.RegistrationViewModel
 
 @{
-    ViewData["Title"] = "Registartion";
+    ViewData["Title"] = "Registration";
 }
 
-<h1>Registartion</h1>
+<h1>Registration</h1>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Registartion">
+        <form asp-action="Registration">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @if (ViewBag.Message != null)
                 {
@@ -46,7 +46,8 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Register" class="btn btn-primary" />
+                @* <input type="submit" value="Register"/> *@
+                <button type="submit" class="button">Register</button>
             </div>
         </form>
     </div>

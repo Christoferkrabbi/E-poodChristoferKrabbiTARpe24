@@ -18,36 +18,69 @@ body {
 }
 
 /* NAVBAR */
-.navbar {
+.navbar, nav.navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    background: #1b1a17;
+    background-color: #1b1a17;
+    padding: 0.5rem 1rem;
     border-bottom: 3px solid #c9a34e;
     z-index: 1000;
 }
 
-    .navbar ul {
+    .navbar .nav-list {
         list-style: none;
         margin: 0;
-        padding: 15px;
+        padding: 0;
         display: flex;
-        justify-content: center;
+        align-items: center;
+        gap: 1rem;
     }
 
-    .navbar li {
-        margin: 0 20px;
+    .navbar .nav-list > li {
+        display: inline-block;
     }
 
-    .navbar ul li a {
-        color: #f4e6c1;
+    .navbar .nav-list > li.auth-group {
+        margin-left: auto;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .navbar .nav-user {
+        font-weight: 500;
+        padding-right: 0.5rem;
+    }
+
+    .navbar a.nav-link,
+    .navbar a {
+        color: inherit;
         text-decoration: none;
-        font-weight: bold;
+        padding: 0.25rem 0.5rem;
     }
 
-        .navbar ul li a:hover {
-            color: #c9a34e;
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
         }
+
+        .navbar li {
+            margin: 0 20px;
+        }
+
+        .navbar ul li a {
+            color: #f4e6c1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .navbar ul li a:hover {
+                color: #c9a34e;
+            }
 
 /* MAIN CONTAINER */
 .container {
@@ -60,12 +93,16 @@ body {
 }
 
 /* HEADINGS */
-h2, h1, h3, h4 {
+h2, h1, h4 {
     border-bottom: 2px solid #c9a34e;
     padding-bottom: 5px;
     color: #c9a34e;
     text-decoration: none;
 }
+
+    h3.product-card, p.product-card{
+        color: #2b1e0f;
+    }
 
 /* PRODUCT GRID */
 .product-grid {
@@ -76,7 +113,7 @@ h2, h1, h3, h4 {
 }
 
 /* PRODUCT CARD (SCROLL STYLE) */
-.product-card {
+.product-card{
     background-image: url("/images/parchment.jpg");
     background-size: cover;
     background-position: center;
@@ -96,7 +133,7 @@ h2, h1, h3, h4 {
     }
 
 /* BUTTONS */
-button {
+button{
     background: #5a3b12;
     color: #f4e6c1;
     border: 1px solid #c9a34e;
@@ -174,4 +211,60 @@ footer {
     margin-left: auto; /* This pushes the entire auth group to the right */
     display: flex; /* Keeps Login and Register side-by-side */
     gap: 15px; /* Adds space between Login and Register */
+}
+
+/* Keep existing rules above this section */
+
+.navbar {
+    background: transparent;
+    padding: 0.5rem 1rem;
+}
+
+/* turn the list into a horizontal flex row */
+.navbar .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* basic list item/link appearance */
+.navbar .nav-list > li {
+    display: inline-block;
+}
+
+/* push auth group to the far right without changing other markup */
+.navbar .nav-list > li.auth-group {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* small spacing for the hello message */
+.navbar .nav-user {
+    font-weight: 500;
+    padding-right: 0.5rem;
+}
+
+/* keep links consistent with existing styling */
+.navbar a.nav-link,
+.navbar a {
+    color: inherit;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+}
+
+/* small responsive tweak: stack items on narrow screens */
+@media (max-width: 576px) {
+    .navbar .nav-list {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .navbar .nav-list > li.auth-group {
+        margin-left: 0;
+    }
 }

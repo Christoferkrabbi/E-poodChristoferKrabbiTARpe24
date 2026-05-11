@@ -21,12 +21,12 @@
                 @if (User?.Identity?.IsAuthenticated == true)
                 {
                     <span class="nav-user">Hello, @User.Identity.Name</span>
-                    <a  href="/Account/Logout">Logout</a>
+                    <a href="/Account/Logout">Logout</a>
                 }
                 else
                 {
                     <a href="/Account/Login">Login</a>
-                    <a href="/Account/Register">Register</a>
+                    <a href="/Account/Registration">Register</a>
                 }
             </li>
         </ul>

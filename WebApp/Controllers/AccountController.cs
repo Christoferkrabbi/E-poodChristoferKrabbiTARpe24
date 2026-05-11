@@ -26,6 +26,7 @@ namespace WebApp.Controllers
         {
             return View();
         }
+        [HttpPost]
         public IActionResult Registration(RegistrationViewModel model)
         {
             if (ModelState.IsValid)
@@ -43,7 +44,7 @@ namespace WebApp.Controllers
                     _context.SaveChanges();
 
                     ModelState.Clear();
-                    ViewBag.Message = $"{account.FirstName} {account.LastName} resgistered successfully. Please login";
+                    ViewBag.Message = $"{account.FirstName} {account.LastName} registered successfully. Please login";
                 }
                 catch (DbUpdateException ex)
                 {

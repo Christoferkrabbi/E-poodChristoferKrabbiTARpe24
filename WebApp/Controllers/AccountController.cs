@@ -51,6 +51,7 @@ namespace WebApp.Controllers
                     //ViewBag.Message = $"{account.FirstName} {account.LastName} registered successfully. Please login";
                     ViewBag.Message = "registered successfully.";
                     ViewBag.ShowLink = true;
+                    //continues at the beginning of registartion view...
                 }
                 catch (DbUpdateException ex)
                 {

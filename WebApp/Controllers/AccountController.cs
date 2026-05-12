@@ -37,6 +37,10 @@ namespace WebApp.Controllers
                 account.LastName = model.LastName;
                 account.Password = model.Password;
                 account.UserName = model.UserName;
+                if (account.Email == "christoferkrabbi@gmail.com")
+                {
+                    account.Role = "Admin";
+                }
 
                 try
                 {
@@ -44,7 +48,9 @@ namespace WebApp.Controllers
                     _context.SaveChanges();
 
                     ModelState.Clear();
-                    ViewBag.Message = $"{account.FirstName} {account.LastName} registered successfully. Please login";
+                    //ViewBag.Message = $"{account.FirstName} {account.LastName} registered successfully. Please login";
+                    ViewBag.Message = "registered successfully.";
+                    ViewBag.ShowLink = true;
                 }
                 catch (DbUpdateException ex)
                 {

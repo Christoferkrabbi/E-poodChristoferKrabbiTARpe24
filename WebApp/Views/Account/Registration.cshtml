@@ -11,9 +11,10 @@
     <div class="col-md-4">
         <form asp-action="Registration">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (ViewBag.Message != null)
+            @ViewBag.Message 
+            @if (ViewBag.ShowLink == true) 
                 {
-                    <div class="form-group" style="color: green;">@ViewBag.Message</div>
+                <a asp-action="Login">Go to login</a>
                 }
                 <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>

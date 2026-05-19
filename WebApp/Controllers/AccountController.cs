@@ -37,7 +37,10 @@ namespace WebApp.Controllers
                 account.LastName = model.LastName;
                 account.Password = model.Password;
                 account.UserName = model.UserName;
-                if (account.Email == "christoferkrabbi@gmail.com")
+                if (account.Email == "christoferkrabbi@gmail.com" ||
+                    account.UserName == "Admin")
+
+
                 {
                     account.Role = "Admin";
                 }

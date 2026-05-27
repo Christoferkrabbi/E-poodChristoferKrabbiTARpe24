@@ -14,6 +14,10 @@ namespace WebApp
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
+			// Diagnostic: print effective connection string for "Default"
+			var conn = builder.Configuration.GetConnectionString("Default");
+			Console.WriteLine($"ConnectionStrings:Default = '{conn ?? "<null>"}'");
+
 			// Register typed HttpClient for IOrderService.
 			// Base address is read from configuration key "Services:OrderServiceUrl" or environment variable "ORDER_SERVICE_URL".
 			builder.Services.AddHttpClient<IOrderService, OrderServiceHttpClient>(client =>
@@ -26,6 +30,7 @@ namespace WebApp
 				}
 			});
 
+			// Use the connection string (leave unchanged after you confirm it)
 			builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 			// optional: global euro culture (keeps currency formatting consistent)

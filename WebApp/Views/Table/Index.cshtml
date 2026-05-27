@@ -1,0 +1,28 @@
+﻿@model IEnumerable<WebApp.Entities.PlayTable>
+
+<h2>Play Tables</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="CreateTable">
+        Add PlayTable
+    </a>
+}
+
+@foreach (var table in Model)
+{
+    <div style="border:1px solid black;padding:10px;margin:10px">
+
+        <h3>@table.TableName</h3>
+
+        <p>
+            Store:
+            @table.LocationStoreName
+        </p>
+
+        <p>
+            @table.TableDescription
+        </p>
+
+    </div>
+}

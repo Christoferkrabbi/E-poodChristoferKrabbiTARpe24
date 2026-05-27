@@ -1,0 +1,27 @@
+﻿@using WebApp.Entities
+@model PlayTable
+
+<h2>Create PlayTable</h2>
+
+<form asp-action="CreateTable" method="post">
+
+    <div>
+        <label>Table Name</label>
+        <input asp-for="TableName" />
+    </div>
+
+    <div>
+        <label>Store Location</label>
+        <input asp-for="LocationStoreName" />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <textarea asp-for="TableDescription"></textarea>
+    </div>
+
+    <button type="submit">
+        Create Table
+    </button>
+
+</form>

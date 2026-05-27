@@ -40,7 +40,7 @@ namespace WebApp.Controllers
                 return Forbid();
 
             var overlapping = _context.PlayTableBookings.Any(b =>
-                b.TableID == tableId &&
+                b.PlayTableID == tableId &&
                 (fromTime < b.ToTime && toTime > b.FromTime)
             );
 
@@ -54,7 +54,7 @@ namespace WebApp.Controllers
 
             var booking = new PlayTableBooking
             {
-                TableID = tableId,
+                PlayTableID = tableId,
                 UserID = userId,
                 FromTime = fromTime,
                 ToTime = toTime,

@@ -1,17 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-public class PlayTableBooking
+namespace WebApp.Entities
 {
-	[Key]
-	public int BookingID { get; set; }
 
-	public string TableID { get; set; }
+	public class PlayTableBooking
+	{
+		[Key]
+		public int BookingID { get; set; }
 
-	public string UserID { get; set; }
+		public string PlayTableID { get; set; }
 
-	public DateTime FromTime { get; set; }
+		public string UserID { get; set; }
 
-	public DateTime ToTime { get; set; }
+		public DateTime FromTime { get; set; }
 
-	public string BookingInfo { get; set; }
+		public DateTime ToTime { get; set; }
+
+		public string BookingInfo { get; set; }
+
+
+	}
 }

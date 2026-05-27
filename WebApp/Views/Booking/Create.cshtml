@@ -21,7 +21,7 @@
             <select id="tableId" name="tableId" class="form-control">
                 @foreach (var t in Model)
                 {
-                    <option value="@t.TableID">@t.TableID - @t.Name</option>
+                    <option value="@t.Id">@t.Id - @t.TableName</option>
                 }
             </select>
         }

@@ -64,7 +64,17 @@ namespace WebApp.Controllers
             _context.PlayTableBookings.Add(booking);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            // Preserve booking summary for the thank-you page
+            TempData["BookingInfo"] = bookingInfo;
+
+            return RedirectToAction(nameof(ResultPage));
+        }
+
+        public IActionResult ResultPage()
+        {
+            // Pass the booking summary (if any) as the view model
+            var bookingInfo = TempData["BookingInfo"] as string;
+            return View((object)bookingInfo);   
         }
     }
 }

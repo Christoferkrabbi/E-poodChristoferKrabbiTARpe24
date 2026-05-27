@@ -15,7 +15,27 @@
     @Html.AntiForgeryToken()
     <div class="form-group">
         <label for="tableId">Table ID</label>
-        <input id="tableId" name="tableId" class="form-control" value="T1" />
+
+        @if (Model != null && Model.Any())
+        {
+            <select id="tableId" name="tableId" class="form-control">
+                @foreach (var t in Model)
+                {
+                    <option value="@t.TableID">@t.TableID - @t.Name</option>
+                }
+            </select>
+        }
+        else
+        {
+            // Temporary preset tables 
+            
+            <select id="tableId" name="tableId" class="form-control">
+                <option value="T1">T1</option>
+                <option value="T2">T2</option>
+                <option value="T3">T3</option>
+                <option value="T4">T4</option>
+            </select>
+        }
     </div>
 
     <div class="form-group">

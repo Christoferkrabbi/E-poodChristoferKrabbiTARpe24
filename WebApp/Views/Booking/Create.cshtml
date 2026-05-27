@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WebApp.Entities.PlayTable>
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<h2>Create Booking</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form asp-controller="Booking" asp-action="BookTable" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="tableId">Table ID</label>
+        <input id="tableId" name="tableId" class="form-control" value="T1" />
+    </div>
+
+    <div class="form-group">
+        <label for="fromTime">From</label>
+        <input id="fromTime" name="fromTime" type="datetime-local" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="toTime">To</label>
+        <input id="toTime" name="toTime" type="datetime-local" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book</button>
+</form>

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Entities;
+using WebApp.Data;
 using WebApp.Services;
 
 namespace WebApp

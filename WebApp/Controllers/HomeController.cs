@@ -6,59 +6,49 @@ using System.Text.Json;
 using System.Linq;
 using WebApp.Data;
 using WebApp.Models;
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
 	public class HomeController : Controller
-    {
-        private readonly HttpClient _httpClient;
+	{
+		private readonly IOrderService _orderService;
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-        public HomeController(IHttpClientFactory factory)
-        {
-            _httpClient = factory.CreateClient();
-        }
+		public HomeController(IOrderService orderService)
+		{
+			_orderService = orderService;
+		}
 
-        public async Task<IActionResult> CreateOrder(int productId)
-        {
-            var orderData = new
-            {
-                ProductId = productId,
-                UserId = 1
-            };
+		public async Task<IActionResult> CreateOrder(int productId)
+		{
+			var orderDto = new OrderCreateDto
+			{
+				ProductId = productId,
+				UserId = 1
+			};
 
-            var content = new StringContent(
-                JsonSerializer.Serialize(orderData),
-                Encoding.UTF8,
-                "application/json"
-            );
-
-            var response = await _httpClient.PostAsync(
-                "http://localhost:5047/api/order/create",
-                content
-            );
-
-			var json = await response.Content.ReadAsStringAsync();
+			var serviceResult = await _orderService.CreateOrderAsync(orderDto);
 
 			string message = "Something went wrong";
 
-			if (json.Contains("Payment failed"))
+			if (serviceResult.Message?.Contains("Payment failed") == true)
 				message = "If this was real, you'd be furious rn, contacting support and stuff";
-			else if (json.Contains("Order created"))
+			else if (serviceResult.Message?.Contains("Order created") == true)
 				message = "If this was real, your purcase would have been completed and youd be really happy or you'd probably regret spending your money. But either way... here you are!";
 
 			var model = new OrderResultViewModel
 			{
 				Result = message,
-				IsSuccess = response.IsSuccessStatusCode
+				IsSuccess = serviceResult.IsSuccess
 			};
 
 			// Record completed order in in-memory storage so history can show purchased items and cost
-			if (response.IsSuccessStatusCode && json.Contains("Order created"))
+			if (serviceResult.IsSuccess && serviceResult.Message?.Contains("Order created") == true)
 			{
 				// reconstruct purchased item (matches StoreController listing)
 				var products = new List<Product>
@@ -104,9 +94,9 @@ namespace WebApp.Controllers
 
 				OrderStorage.Orders.Add(order);
 			}
-			
+
 			return View("OrderResult", model);
-        }
+		}
 
 		[Authorize]
 		public IActionResult OrderHistory()

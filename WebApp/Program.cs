@@ -1,50 +1,64 @@
+using System;
 using System.Globalization;
+using System.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Entities;
+using WebApp.Services;
 
 namespace WebApp
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+			// Register typed HttpClient for IOrderService.
+			// Base address is read from configuration key "Services:OrderServiceUrl" or environment variable "ORDER_SERVICE_URL".
+			builder.Services.AddHttpClient<IOrderService, OrderServiceHttpClient>(client =>
+			{
+				var url = builder.Configuration["Services:OrderServiceUrl"] ?? Environment.GetEnvironmentVariable("ORDER_SERVICE_URL");
+				if (!string.IsNullOrEmpty(url))
+				{
+					// ensure trailing slash isn't required; relative paths will combine correctly
+					client.BaseAddress = new Uri(url);
+				}
+			});
 
-            // optional: global euro culture (keeps currency formatting consistent)
-            var euroCulture = new CultureInfo("en-IE");
-            CultureInfo.DefaultThreadCurrentCulture = euroCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = euroCulture;
+			builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddHttpClient();
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddSession();
+			// optional: global euro culture (keeps currency formatting consistent)
+			var euroCulture = new CultureInfo("en-IE");
+			CultureInfo.DefaultThreadCurrentCulture = euroCulture;
+			CultureInfo.DefaultThreadCurrentUICulture = euroCulture;
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+			builder.Services.AddControllersWithViews();
+			builder.Services.AddSession();
 
-            var app = builder.Build();
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+			var app = builder.Build();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSession();
-            app.UseRouting();
+			if (!app.Environment.IsDevelopment())
+			{
+				app.UseExceptionHandler("/Home/Error");
+				app.UseHsts();
+			}
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+			app.UseSession();
+			app.UseRouting();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Store}/{action=Index}/{id?}");
+			app.UseAuthentication();
+			app.UseAuthorization();
 
-            app.Run();
-        }
-    }
+			app.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Store}/{action=Index}/{id?}");
+
+			app.Run();
+		}
+	}
 }

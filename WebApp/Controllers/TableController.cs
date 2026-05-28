@@ -21,6 +21,7 @@ namespace WebApp.Controllers
 			return View(tables);
 		}
 
+
 		public IActionResult CreateTable()
 		{
 			if (!User.IsInRole("Admin"))

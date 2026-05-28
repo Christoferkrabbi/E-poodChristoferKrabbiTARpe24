@@ -47,10 +47,26 @@ namespace WebApp.Controllers
 
                 try
                 {
-                    _context.UserAccounts.Add(account);
-                    _context.SaveChanges();
+					bool emailExists = _context.UserAccounts.Any(x => x.Email == model.Email);
+					bool userExists = _context.UserAccounts.Any(x => x.UserName == model.UserName);
 
-                    ModelState.Clear();
+					if (emailExists)
+					{
+						ModelState.AddModelError("Email", "This email is already being used");
+						return View(model);
+					}
+
+					if (userExists)
+					{
+						ModelState.AddModelError("UserName", "Username is already being used");
+						return View(model);
+					}
+
+					// 2. Kui kõik on korras, siis alles salvesta
+					_context.UserAccounts.Add(account);
+					_context.SaveChanges();
+
+					ModelState.Clear();
                     //ViewBag.Message = $"{account.FirstName} {account.LastName} registered successfully. Please login";
                     ViewBag.Message = "registered successfully.";
                     ViewBag.ShowLink = true;
@@ -111,7 +127,14 @@ namespace WebApp.Controllers
             ViewBag.Name = HttpContext.User.Identity.Name;
             return View();
         }
-    }
+
+		[HttpGet]
+		public IActionResult AccessDenied()
+		{
+			// This will look for a view named "AccessDenied.cshtml"
+			return View();
+		}
+	}
 
 }
 

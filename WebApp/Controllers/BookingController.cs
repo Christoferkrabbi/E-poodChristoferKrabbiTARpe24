@@ -16,20 +16,17 @@ namespace WebApp.Controllers
             _context = context;
         }
 
-        // GET /Booking -> redirect to Create
         public IActionResult Index()
         {
             return RedirectToAction(nameof(Create));
         }
 
-        // GET /Booking/Create
         public IActionResult Create()
         {
             var tables = _context.Set<PlayTable>().ToList();
             return View(tables);
         }
 
-        // POST /Booking/BookTable
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -39,25 +36,57 @@ namespace WebApp.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Forbid();
 
-            var overlapping = _context.PlayTableBookings.Any(b =>
-                b.PlayTableID == tableId &&
-                (fromTime < b.ToTime && toTime > b.FromTime)
-            );
-
-            if (overlapping)
+            if (!Guid.TryParse(tableId, out var tableGuid))
             {
-                TempData["Error"] = "Booking is overlapping an already existing booking, please adjust time";
+                TempData["Error"] = "Invalid table selection";
                 return RedirectToAction(nameof(Create));
             }
 
-            var bookingInfo = $"{tableId} is booked to {userId} at {fromTime} until {toTime}";
+            // Normalize incoming times as local
+            var requestedFrom = DateTime.SpecifyKind(fromTime, DateTimeKind.Local);
+            var requestedTo = DateTime.SpecifyKind(toTime, DateTimeKind.Local);
+
+            if (requestedFrom < DateTime.Now)
+            {
+                TempData["Error"] = "From time must be now or later.";
+                return RedirectToAction(nameof(Create));
+            }
+
+            // Ensure from is less than to
+            if (requestedFrom >= requestedTo)
+            {
+                TempData["Error"] = "End time must be after start time.";
+                return RedirectToAction(nameof(Create));
+            }
+
+            var existingBookings = _context.PlayTableBookings
+                .Where(b => b.PlayTableID == tableId)
+                .ToList();
+
+            var overlapping = existingBookings.Any(b =>
+            {
+                var existingFrom = DateTime.SpecifyKind(b.FromTime, DateTimeKind.Local);
+                var existingTo = DateTime.SpecifyKind(b.ToTime, DateTimeKind.Local);
+                return requestedFrom < existingTo && requestedTo > existingFrom;
+            });
+
+            if (overlapping)
+            {
+                TempData["Error"] = "Booking is not available due to an existing booking; please adjust the time.";
+                return RedirectToAction(nameof(Create));
+            }
+
+            var table = _context.PlayTables.Find(tableGuid);
+            var tableName = table?.TableName ?? tableId;
+
+            var bookingInfo = $"{tableName} is booked to {userId} at {requestedFrom} until {requestedTo}";
 
             var booking = new PlayTableBooking
             {
                 PlayTableID = tableId,
                 UserID = userId,
-                FromTime = fromTime,
-                ToTime = toTime,
+                FromTime = requestedFrom,
+                ToTime = requestedTo,
                 BookingInfo = bookingInfo
             };
 
@@ -74,7 +103,7 @@ namespace WebApp.Controllers
         {
             // Pass the booking summary (if any) as the view model
             var bookingInfo = TempData["BookingInfo"] as string;
-            return View((object)bookingInfo);   
+            return View((object)bookingInfo);
         }
     }
 }

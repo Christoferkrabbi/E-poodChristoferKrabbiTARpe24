@@ -10,7 +10,7 @@
 
 @if (selected != null)
 {
-    <div class="card mb-3">
+    <div class="container">
         <div class="card-body">
             <h4 class="card-title">@selected.TableName</h4>
             <p class="card-text"><strong>Location:</strong> @selected.LocationStoreName</p>
@@ -18,7 +18,7 @@
 
             @if (isAuthenticated)
             {
-                <a asp-controller="Booking" asp-action="Create" asp-route-tableId="@selected.Id" class="btn btn-primary">Book this</a>
+                <a asp-controller="Booking" asp-action="Create" asp-route-tableId="@selected.Id" class="button">Book this</a>
             }
             else
             {
@@ -26,6 +26,7 @@
             }
         </div>
     </div>
+    <br/>
 
     <h4>Bookings for this table</h4>
     @if (selected.Bookings != null && selected.Bookings.Any())
@@ -70,6 +71,7 @@ else
 }
 
 <hr />
+<br />
 
 <h4>All tables</h4>
 <table class="table table-striped">
@@ -89,10 +91,10 @@ else
                 <td>@t.LocationStoreName</td>
                 <td>@t.TableDescription</td>
                 <td>
-                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("TableInfo", "Table", new { tableId = t.Id })">Details</a>
+                    <a class="button" href="@Url.Action("TableInfo", "Table", new { tableId = t.Id })">Details</a>
                     @if (isAuthenticated)
                     {
-                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Create", "Booking", new { tableId = t.Id })">Book this</a>
+                        <a class="button" href="@Url.Action("Create", "Booking", new { tableId = t.Id })">Book this</a>
                     }
                 </td>
             </tr>

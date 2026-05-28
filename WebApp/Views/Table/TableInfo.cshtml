@@ -1,0 +1,101 @@
+﻿@model IEnumerable<WebApp.Entities.PlayTable>
+
+@{
+    ViewData["Title"] = "Table Info";
+    var selected = ViewBag.SelectedTable as WebApp.Entities.PlayTable;
+    var isAuthenticated = ViewBag.IsAuthenticated as bool? ?? false;
+}
+
+<h2>Table Info</h2>
+
+@if (selected != null)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4 class="card-title">@selected.TableName</h4>
+            <p class="card-text"><strong>Location:</strong> @selected.LocationStoreName</p>
+            <p class="card-text"><strong>Description:</strong> @selected.TableDescription</p>
+
+            @if (isAuthenticated)
+            {
+                <a asp-controller="Booking" asp-action="Create" asp-route-tableId="@selected.Id" class="btn btn-primary">Book this</a>
+            }
+            else
+            {
+                <p class="text-muted">Log in to make a booking.</p>
+            }
+        </div>
+    </div>
+
+    <h4>Bookings for this table</h4>
+    @if (selected.Bookings != null && selected.Bookings.Any())
+    {
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in selected.Bookings.OrderBy(b => b.FromTime))
+                {
+                    <tr>
+                        <td>@b.UserID</td>
+                        <td>@b.FromTime.ToString("g")</td>
+                        <td>@b.ToTime.ToString("g")</td>
+                        <td>@b.BookingInfo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No bookings found for this table.</p>
+    }
+}
+else
+{
+    if (!isAuthenticated)
+    {
+        <p>Please select a table to see its bookings. (Log in to create a booking.)</p>
+    }
+    else
+    {
+        <p>Select a table to view details or book it.</p>
+    }
+}
+
+<hr />
+
+<h4>All tables</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Table</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.TableName</td>
+                <td>@t.LocationStoreName</td>
+                <td>@t.TableDescription</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("TableInfo", "Table", new { tableId = t.Id })">Details</a>
+                    @if (isAuthenticated)
+                    {
+                        <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Create", "Booking", new { tableId = t.Id })">Book this</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

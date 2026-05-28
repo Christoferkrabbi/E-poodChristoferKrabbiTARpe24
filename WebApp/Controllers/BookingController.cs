@@ -60,7 +60,7 @@ namespace WebApp.Controllers
             }
 
             var existingBookings = _context.PlayTableBookings
-                .Where(b => b.PlayTableID == tableId)
+                .Where(b => b.PlayTableID == tableGuid)
                 .ToList();
 
             var overlapping = existingBookings.Any(b =>
@@ -83,7 +83,7 @@ namespace WebApp.Controllers
 
             var booking = new PlayTableBooking
             {
-                PlayTableID = tableId,
+                PlayTableID = tableGuid,
                 UserID = userId,
                 FromTime = requestedFrom,
                 ToTime = requestedTo,

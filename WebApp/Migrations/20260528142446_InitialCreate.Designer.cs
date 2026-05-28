@@ -12,8 +12,8 @@ using WebApp.Data;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260528101307_migration8")]
-    partial class migration8
+    [Migration("20260528142446_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,10 +44,6 @@ namespace WebApp.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TableCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TableDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -76,9 +72,8 @@ namespace WebApp.Migrations
                     b.Property<DateTime>("FromTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PlayTableID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PlayTableID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ToTime")
                         .HasColumnType("datetime2");
@@ -88,6 +83,8 @@ namespace WebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookingID");
+
+                    b.HasIndex("PlayTableID");
 
                     b.ToTable("PlayTableBookings");
                 });
@@ -134,6 +131,22 @@ namespace WebApp.Migrations
                         .IsUnique();
 
                     b.ToTable("UserAccounts");
+                });
+
+            modelBuilder.Entity("WebApp.Entities.PlayTableBooking", b =>
+                {
+                    b.HasOne("WebApp.Entities.PlayTable", "PlayTable")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PlayTableID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlayTable");
+                });
+
+            modelBuilder.Entity("WebApp.Entities.PlayTable", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

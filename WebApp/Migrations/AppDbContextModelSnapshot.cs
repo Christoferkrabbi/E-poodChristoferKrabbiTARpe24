@@ -69,9 +69,8 @@ namespace WebApp.Migrations
                     b.Property<DateTime>("FromTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PlayTableID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PlayTableID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ToTime")
                         .HasColumnType("datetime2");
@@ -81,6 +80,8 @@ namespace WebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookingID");
+
+                    b.HasIndex("PlayTableID");
 
                     b.ToTable("PlayTableBookings");
                 });
@@ -127,6 +128,22 @@ namespace WebApp.Migrations
                         .IsUnique();
 
                     b.ToTable("UserAccounts");
+                });
+
+            modelBuilder.Entity("WebApp.Entities.PlayTableBooking", b =>
+                {
+                    b.HasOne("WebApp.Entities.PlayTable", "PlayTable")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PlayTableID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlayTable");
+                });
+
+            modelBuilder.Entity("WebApp.Entities.PlayTable", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

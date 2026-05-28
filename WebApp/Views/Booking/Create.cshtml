@@ -38,4 +38,29 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Book</button>
+
+    <!-- Button that opens TableInfo view for the currently selected table -->
+    <button type="button" id="btnTableInfo" class="btn btn-secondary" style="margin-left:8px;">
+        Table info
+    </button>
 </form>
+
+@section Scripts {
+    <script>
+        (function () {
+            var btn = document.getElementById('btnTableInfo');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                var sel = document.getElementById('tableId');
+                if (!sel) {
+                    // go to TableInfo list view
+                    window.location.href = '@Url.Action("TableInfo", "Table")';
+                    return;
+                }
+                var selected = sel.value;
+                // open TableInfo for selected table (query string param "tableId")
+                window.location.href = '@Url.Action("TableInfo", "Table")' + '?tableId=' + encodeURIComponent(selected);
+            });
+        })();
+    </script>
+}

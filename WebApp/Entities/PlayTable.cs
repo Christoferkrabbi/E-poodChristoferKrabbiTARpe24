@@ -21,6 +21,8 @@ namespace WebApp.Entities
 		public DateTime ModifiedAt { get; set; }
 
 		public DateTime LastVisitAt { get; set; }
+
+		public virtual ICollection<PlayTableBooking> Bookings { get; set; } = new List<PlayTableBooking>();
 		//[Key]
 		//public string TableID { get; set; } = null!;
 		//public string Name { get; set; } = null!;

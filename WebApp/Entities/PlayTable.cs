@@ -7,7 +7,6 @@ namespace WebApp.Entities
 	{
 		[Key]
 		public Guid Id { get; set; }
-		public string TableCode { get; set; }
 		public string TableName { get; set; }
 
 		public string LocationStoreName { get; set; }

@@ -1,13 +1,7 @@
-﻿@model IEnumerable<WebApp.Entities.PlayTable>
+﻿@using WebApp.Entities
+@model List<PlayTable>
 
-<h2>Play Tables</h2>
-
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="CreateTable">
-        Add PlayTable
-    </a>
-}
+<h2>PlayTables</h2>
 
 @foreach (var table in Model)
 {
@@ -15,14 +9,9 @@
 
         <h3>@table.TableName</h3>
 
-        <p>
-            Store:
-            @table.LocationStoreName
-        </p>
+        <p>Store: @table.LocationStoreName</p>
 
-        <p>
-            @table.TableDescription
-        </p>
+        <p>@table.TableDescription</p>
 
     </div>
 }

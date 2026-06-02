@@ -32,7 +32,23 @@ namespace WebApp.Data
 					  .HasForeignKey(b => b.PlayTableID)
 					  .OnDelete(DeleteBehavior.Cascade);
 			});
-		}
+
+			//admin login preste
+            modelBuilder.Entity<UserAccount>().HasData(
+				new UserAccount
+				{
+                    Id = 1,
+					FirstName = "admin",
+					LastName = "account",
+                    UserName = "admin",
+					Email = "admin@example.com",
+					Password = "admin",
+					Role = "Admin"
+				}
+			);
+        }
+
+
 		/*
 		// 3. Korrektsed algandmed (Seed Data) testitavate Guididega
 		modelBuilder.Entity<PlayTable>().HasData(

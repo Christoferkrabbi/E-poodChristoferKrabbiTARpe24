@@ -158,30 +158,32 @@ namespace WebApp.Controllers
         [HttpGet]
         public IActionResult Profile()
         {
-            string currentUserName = User.Identity?.Name ?? "";
+            // Grabs your cookie identity authentication name (which holds your user Email string)
+            string currentUserEmail = User.Identity?.Name ?? "";
 
-            if (string.IsNullOrEmpty(currentUserName))
+            if (string.IsNullOrEmpty(currentUserEmail))
             {
                 return RedirectToAction("Login");
             }
 
+            // Fetches your single user account entity directly from your AppDbContext table
             var loggedInUser = _context.UserAccounts
-                .FirstOrDefault(u => u.UserName == currentUserName || u.Email == currentUserName);
+                .FirstOrDefault(u => u.Email == currentUserEmail || u.UserName == currentUserEmail);
 
             if (loggedInUser == null)
             {
                 return NotFound("Kasutajaprofiili ei leitud.");
             }
 
-            // FIX: Pull directly from your active in-memory storage list!
+            // Gathers your transactions from your in-memory list by looking for both usernames and emails
             ViewBag.Orders = OrderStorage.Orders
-                .Where(o => string.Equals(o.UserName, currentUserName, StringComparison.OrdinalIgnoreCase))
+                .Where(o => string.Equals(o.UserName, loggedInUser.UserName, StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(o.UserName, loggedInUser.Email, StringComparison.OrdinalIgnoreCase))
                 .OrderByDescending(o => o.CreatedAt)
                 .ToList();
 
             return View(loggedInUser);
         }
-
 
     }
 }

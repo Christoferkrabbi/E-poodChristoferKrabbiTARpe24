@@ -74,13 +74,10 @@ public class CartController : Controller
         if (!cart.Any())
             return RedirectToAction("Index");
 
-        // Grab the first item from the cart to pass to the existing CreateOrder logic
         var firstItem = cart.First();
 
-        // Clear the user's active session cart basket out completely
         SaveCart(new List<CartItem>());
 
-        // FIX: Instead of loading an empty success view, route directly to your real order creation service!
         return RedirectToAction("CreateOrder", "Home", new { productId = firstItem.ProductId });
     }
 

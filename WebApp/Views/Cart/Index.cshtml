@@ -7,8 +7,7 @@
     <h2>Your Cart</h2>
 
     <div class="row">
-        <!-- Products Summary Column -->
-        <div class="col-md-8">
+        <div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -41,15 +40,14 @@
                 </tbody>
             </table>
 
-            <!-- Shipping Logistics Details Form Section -->
-            <div class="card card-body bg-light mt-4" style="padding: 20px; border-radius: 8px;">
-                <h4 class="mb-3">Kohaletoimetamise andmed</h4>
+            <div class="container" style="margin-top: 20px;">
+                <h4>Kohaletoimetamise andmed</h4>
                 
                 <form method="post" asp-action="Checkout">
                     @Html.AntiForgeryToken()
 
-                    <div class="form-group mb-3">
-                        <label class="control-label" style="font-weight: 600;">Täielik Aadress *</label>
+                    <div>
+                        <label>Täielik Aadress *</label>
                         <input type="text" name="address" required class="form-control" placeholder="Tänav, maja, korter" />
                     </div>
 

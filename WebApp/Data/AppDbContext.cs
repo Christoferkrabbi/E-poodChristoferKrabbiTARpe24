@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using WebApp.Entities;
+using WebApp.Models;
 
 namespace WebApp.Data
 {
@@ -12,7 +13,8 @@ namespace WebApp.Data
 
 		public DbSet<PlayTableBooking> PlayTableBookings { get; set; }
 		public DbSet<UserAccount> UserAccounts { get; set; }
-		public DbSet<PlayTable> PlayTables { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<PlayTable> PlayTables { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -26,64 +26,84 @@ public class CartController : Controller
 		return View(cart);
 	}
 
-	[HttpPost]
-	public IActionResult AddToCart(int productId, string name, decimal price)
-	{
-		var cart = GetCart();
+    [HttpPost]
+    public IActionResult AddToCart(int productId, string name, decimal price)
+    {
+        var cart = GetCart();
+        var existingItem = cart.FirstOrDefault(x => x.ProductId == productId);
 
-		var existingItem = cart.FirstOrDefault(x => x.ProductId == productId);
+        if (existingItem != null)
+        {
+            existingItem.Quantity++;
+        }
+        else
+        {
+            cart.Add(new CartItem
+            {
+                ProductId = productId,
+                Name = name,
+                Price = price,
+                Quantity = 1
+            });
+        }
 
-		if (existingItem != null)
-		{
-			existingItem.Quantity++;
-		}
-		else
-		{
-			cart.Add(new CartItem
-			{
-				ProductId = productId,
-				Name = name,
-				Price = price,
-				Quantity = 1
-			});
-		}
+        SaveCart(cart);
+        return RedirectToAction("Index", "Store");
+    }
 
-		SaveCart(cart);
+    [HttpPost]
+    public IActionResult RemoveFromCart(int productId)
+    {
+        var cart = GetCart();
+        var item = cart.FirstOrDefault(x => x.ProductId == productId);
+        if (item != null)
+        {
+            cart.Remove(item);
+        }
 
-		return RedirectToAction("Index", "Store");
-	}
+        SaveCart(cart);
+        return RedirectToAction("Index");
+    }
 
-	[HttpPost]
-	public IActionResult RemoveFromCart(int productId)
-	{
-		var cart = GetCart();
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Checkout(string address, string city, string postalCode)
+    {
+        var cart = GetCart();
 
-		var item = cart.FirstOrDefault(x => x.ProductId == productId);
-		if (item != null)
-		{
-			cart.Remove(item);
-		}
+        if (!cart.Any())
+            return RedirectToAction("Index");
 
-		SaveCart(cart);
+        // Grab the first item from the cart to pass to the existing CreateOrder logic
+        var firstItem = cart.First();
 
-		return RedirectToAction("Index");
-	}
+        // Clear the user's active session cart basket out completely
+        SaveCart(new List<CartItem>());
 
-	[HttpPost]
-	public IActionResult Checkout()
-	{
-		var cart = GetCart();
+        // FIX: Instead of loading an empty success view, route directly to your real order creation service!
+        return RedirectToAction("CreateOrder", "Home", new { productId = firstItem.ProductId });
+    }
 
-		if (!cart.Any())
-			return RedirectToAction("Index");
+    [HttpGet]
+    public IActionResult Success()
+    {
+        if (TempData["OrderId"] == null)
+        {
+            return RedirectToAction("Index", "Store");
+        }
 
-		// For now: send first item (simple version)
-		// BUT this is where I'd normally send full cart to OrderService
+        ViewBag.OrderId = TempData["OrderId"];
+        ViewBag.TotalAmount = TempData["TotalAmount"]?.ToString();
 
-		var firstItem = cart.First();
+        // Utilizing your exact existing OrderResultViewModel properties
+        var viewModel = new OrderResultViewModel
+        {
+            IsSuccess = true,
+            Result = "Makse sooritatud edukalt (Payment Service OK)"
+        };
 
-		SaveCart(new List<CartItem>());
+        return View(viewModel);
+    }
 
-		return RedirectToAction("CreateOrder", "Home", new { productId = firstItem.ProductId });
-	}
+
 }

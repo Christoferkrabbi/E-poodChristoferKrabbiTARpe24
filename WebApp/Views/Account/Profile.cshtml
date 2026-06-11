@@ -1,0 +1,103 @@
+﻿@model WebApp.Entities.UserAccount
+@{
+    ViewData["Title"] = "Minu Konto";
+    var ordersList = ViewBag.Orders as IEnumerable<WebApp.Models.Order>;
+}
+
+<!-- Profile Layout Block remains identical -->
+<div class="container" style="margin-top: 40px; max-width: 700px; font-family: sans-serif;">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white p-4 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <div style="width: 55px; height: 55px; background: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;" class="mr-3">
+                    @(Model?.UserName?.Substring(0, 1).ToUpper() ?? "U")
+                </div>
+                <div>
+                    <h3 class="mb-0" style="font-size: 20px;">@Model?.FirstName @Model?.LastName</h3>
+                    <small class="text-light">@@@Model?.UserName</small>
+                </div>
+            </div>
+            
+            <button type="button" class="btn btn-outline-light btn-sm" data-toggle="modal" data-target="#orderHistoryModal" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">
+                📜 Tellimuste ajalugu
+            </button>
+        </div>
+
+        <div class="card-body p-4">
+            <h4 class="mb-3 border-bottom pb-2">Konto andmed</h4>
+            <div class="row">
+                <div class="col-md-6 form-group mb-3">
+                    <label style="font-weight: 600; color: #495057;">E-maili aadress</label>
+                    <input type="text" value="@Model?.Email" readonly class="form-control bg-light" />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label style="font-weight: 600; color: #495057;">Kasutajatunnus</label>
+                    <input type="text" value="@Model?.UserName" readonly class="form-control bg-light" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Popup Overlay Block -->
+<div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title" id="orderHistoryModalLabel">Order History</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                @if (ordersList == null || !ordersList.Any())
+                {
+                    <p class="text-muted text-center my-3">No orders found for your account.</p>
+                }
+                else
+                {
+                    foreach (var order in ordersList)
+                    {
+                        <div class="order-entry mb-4 p-3 border rounded bg-light" style="text-align: left;">
+                            <h5 class="text-dark">Ordered: @order.CreatedAt.ToString("g")</h5>
+
+                            @if (order.Items != null && order.Items.Any())
+                            {
+                                <table class="table table-sm table-bordered bg-white mt-2">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Qty</th>
+                                            <th>Price</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in order.Items)
+                                        {
+                                            <tr>
+                                                <td>@item.Name</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("C")</td>
+                                                <td>@((item.Price * item.Quantity).ToString("C"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            <p class="mb-0 mt-2"><strong>Total:</strong> <span class="text-primary font-weight-bold">@order.Total.ToString("C")</span></p>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://jquery.com"></script>
+    <script src="https://jsdelivr.net"></script>
+}

@@ -18,9 +18,29 @@ namespace WebApp.Controllers
         {
             _context = appDbContext;
         }
+        [HttpGet]
         public IActionResult Index()
         {
-            return View(_context.UserAccounts.ToList());    
+            // 1. Get the username of the user who is logged in
+            string currentUserName = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(currentUserName))
+            {
+                // If they aren't logged in, redirect them out onto your Login screen page
+                return RedirectToAction("Login");
+            }
+
+            // 2. Fetch the entity straight from your context table (No mapping required)
+            var userProfile = _context.UserAccounts
+                .FirstOrDefault(u => u.UserName == currentUserName);
+
+            if (userProfile == null)
+            {
+                return NotFound("User profile not found in database.");
+            }
+
+            // 3. Pass your regular entity object straight over onto your Account view
+            return View(userProfile);
         }
         public IActionResult Registration()
         {
@@ -134,8 +154,36 @@ namespace WebApp.Controllers
 			// This will look for a view named "AccessDenied.cshtml"
 			return View();
 		}
-	}
 
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            string currentUserName = User.Identity?.Name ?? "";
+
+            if (string.IsNullOrEmpty(currentUserName))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var loggedInUser = _context.UserAccounts
+                .FirstOrDefault(u => u.UserName == currentUserName || u.Email == currentUserName);
+
+            if (loggedInUser == null)
+            {
+                return NotFound("Kasutajaprofiili ei leitud.");
+            }
+
+            // FIX: Pull directly from your active in-memory storage list!
+            ViewBag.Orders = OrderStorage.Orders
+                .Where(o => string.Equals(o.UserName, currentUserName, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(o => o.CreatedAt)
+                .ToList();
+
+            return View(loggedInUser);
+        }
+
+
+    }
 }
 
         

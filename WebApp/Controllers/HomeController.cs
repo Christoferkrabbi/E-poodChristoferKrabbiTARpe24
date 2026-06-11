@@ -89,7 +89,7 @@ namespace WebApp.Controllers
 					Items = items,
 					Total = items.Sum(i => i.Price * i.Quantity),
 					CreatedAt = DateTime.Now,
-					Username = username
+					UserName = username
 				};
 
 				OrderStorage.Orders.Add(order);
@@ -103,7 +103,7 @@ namespace WebApp.Controllers
 		{
 			var username = User?.Identity?.Name ?? "";
 			var ordersForUser = OrderStorage.Orders
-				.Where(o => string.Equals(o.Username, username, StringComparison.OrdinalIgnoreCase))
+				.Where(o => string.Equals(o.UserName, username, StringComparison.OrdinalIgnoreCase))
 				.OrderByDescending(o => o.CreatedAt)
 				.ToList();
 

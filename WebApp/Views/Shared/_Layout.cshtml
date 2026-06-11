@@ -22,6 +22,7 @@
                 @if (User?.Identity?.IsAuthenticated == true)
                 {
                     <span class="nav-user">Hello, @User.Identity.Name</span>
+                    <a asp-area="" asp-controller="Account" asp-action="Profile">Minu Konto</a>
                     <a href="/Account/Logout">Logout</a>
                 }
                 else

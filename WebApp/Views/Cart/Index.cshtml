@@ -1,98 +1,80 @@
 ﻿@model IEnumerable<WebApp.Models.CartItem>
+
 @{
     decimal total = 0;
+    ViewData["Title"] = "Your Treasury & Dispatch";
 }
 
-<div class="container" style="margin-top: 20px; font-family: sans-serif;">
-    <h2>Your Cart</h2>
+<!-- Automatically inherits your global .container background and golden border rules -->
+<div class="container">
+    <h2>Your Treasury</h2>
 
-    <div class="row">
-        <div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        var itemTotal = item.Price * item.Quantity;
-                        total += itemTotal;
+    <!-- Your existing product list table layout updated with fantasy terminology -->
+    <table>
+        <thead>
+            <tr>
+                <th>Artifact</th>
+                <th>Cost</th>
+                <th>Qty</th>
+                <th>Total Sum</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var itemTotal = item.Price * item.Quantity;
+                total += itemTotal;
 
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.Price €</td>
-                            <td>@item.Quantity</td>
-                            <td>@itemTotal €</td>
-                            <td>
-                                <form method="post" asp-action="RemoveFromCart">
-                                    <input type="hidden" name="productId" value="@item.ProductId" />
-                                    <button class="btn btn-danger btn-sm">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price €</td>
+                    <td>@item.Quantity</td>
+                    <td>@itemTotal €</td>
+                    <td>
+                        <form method="post" asp-action="RemoveFromCart">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <!-- Uses a dark crimson shade for thematic discarding -->
+                            <button class="btn-danger" style="background: #5a1212; color: #f4e6c1; border: 1px solid #c9a34e; padding: 4px 8px; cursor: pointer; border-radius: 4px; font-family: inherit;">Discard</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <h2 style="border: none; text-align: right; margin-top: 20px; margin-bottom: 40px;">Tribute Owed: @total €</h2>
 
-            <div class="container" style="margin-top: 20px;">
-                <h4>Kohaletoimetamise andmed</h4>
-                
-                <form method="post" asp-action="Checkout">
-                    @Html.AntiForgeryToken()
+    <!-- Immersive Fantasy Checkout Form Section -->
+    <h4 class="mb-3">Dispatch Coordinates (Delivery Details)</h4>
+    
+    <form method="post" asp-action="Checkout">
+        @Html.AntiForgeryToken()
 
-                    <div>
-                        <label>Täielik Aadress *</label>
-                        <input type="text" name="address" required class="form-control" placeholder="Tänav, maja, korter" />
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 form-group mb-3">
-                            <label class="control-label" style="font-weight: 600;">Linn *</label>
-                            <input type="text" name="city" required class="form-control" placeholder="nt. Tallinn" />
-                        </div>
-                        <div class="col-md-6 form-group mb-4">
-                            <label class="control-label" style="font-weight: 600;">Postiindeks *</label>
-                            <input type="text" name="postalCode" required class="form-control" placeholder="nt. 10135" />
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-0">
-                        <button type="submit" class="btn btn-success w-100 btn-lg" style="font-weight: bold;">
-                            Vormista ost ja Maksa (@total €)
-                        </button>
-                    </div>
-                </form>
+        <div class="row">
+            <div class="col-md-12 form-group mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Realm Address / Stronghold Location *</label>
+                <!-- Inherits input styling naturally from your global setup variables -->
+                <input type="text" name="address" required placeholder="Street address, citadel tower, or tavern room" class="form-control" style="width: 100%; padding: 10px; background: rgba(27, 26, 23, 0.6); border: 1px solid #c9a34e; border-radius: 4px; color: #f4e6c1; box-sizing: border-box; font-family: inherit;" />
             </div>
         </div>
 
-        <!-- Sticky Totals Sidebar Element -->
-        <div class="col-md-4">
-            <div class="card border-secondary">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">Kokkuvõte</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Ostukorv:</span>
-                        <strong>@total €</strong>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Transport:</span>
-                        <span class="text-success font-weight-bold">Tasuta</span>
-                    </div>
-                    <hr />
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span style="font-size: 1.2rem; font-weight: bold;">KOKKU:</span>
-                        <span class="text-primary" style="font-size: 1.4rem; font-weight: bold;">@total €</span>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-6 form-group mb-3">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Settlement / Kingdom *</label>
+                <input type="text" name="city" required placeholder="e.g., Tallinn or Stormwind" class="form-control" style="width: 100%; padding: 10px; background: rgba(27, 26, 23, 0.6); border: 1px solid #c9a34e; border-radius: 4px; color: #f4e6c1; box-sizing: border-box; font-family: inherit;" />
+            </div>
+            <div class="col-md-6 form-group mb-4">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Runic Code / Postal Index *</label>
+                <input type="text" name="postalCode" required placeholder="e.g., 10135" class="form-control" style="width: 100%; padding: 10px; background: rgba(27, 26, 23, 0.6); border: 1px solid #c9a34e; border-radius: 4px; color: #f4e6c1; box-sizing: border-box; font-family: inherit;" />
             </div>
         </div>
-    </div>
+
+        <!-- Leverages your native green button.btn-success styling rule perfectly -->
+        <div class="form-group mt-4" style="text-align: right;">
+            <button type="submit" class="btn-success" style="font-size: 18px; padding: 12px 30px; font-weight: bold; width: 100%; max-width: 380px; font-family: inherit;">
+                Seal the Pact & Transmute (@total €)
+            </button>
+        </div>
+    </form>
 </div>

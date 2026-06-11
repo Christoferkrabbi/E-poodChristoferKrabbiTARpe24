@@ -1,14 +1,36 @@
-﻿<div>
-    <h2>Order Result</h2>
+﻿@model WebApp.Models.OrderResultViewModel
+@{
+    ViewData["Title"] = "Ritual Complete";
+}
 
-    @if (Model.IsSuccess)
+<!-- Automatically inherits your global .container background and golden border rules -->
+<div class="container" style="margin-top: 40px; font-family: Georgia, serif; text-align: center;">
+    
+    @if (Model?.IsSuccess == true)
     {
-        <div class="success">@Model.Result</div>
+        <h2 style="color: #c9a34e; margin-bottom: 20px;">✨ Transmutation Successful! ✨</h2>
+        
+        <!-- Outputs your exact humorous green text message dynamically -->
+        <p class="success" style="font-size: 16px; line-height: 1.6; margin-bottom: 30px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 4px; border: 1px dashed #c9a34e;">
+            @Model?.Result
+        </p>
     }
     else
     {
-        <div class="error">@Model.Result</div>
+        <h2 style="color: #ff6b6b; margin-bottom: 20px;">✕ The Spell Fizzled!</h2>
+        <p class="error" style="font-size: 16px; line-height: 1.6; margin-bottom: 30px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 4px; border: 1px dashed #ff6b6b;">
+            @Model?.Result
+        </p>
     }
-    <br />
-    <a href="/Store/Index">Back to store</a>
+
+    <hr style="border: 0; border-top: 1px solid rgba(201, 163, 78, 0.3); margin: 30px 0;" />
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 14px; opacity: 0.8;">Caster Identity: @User.Identity?.Name</span>
+        
+        <!-- Uses your native .button stylesheet properties -->
+        <a asp-action="Index" asp-controller="Store" class="button">
+            Return to the Bazaar
+        </a>
+    </div>
 </div>
